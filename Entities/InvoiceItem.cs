@@ -32,7 +32,7 @@ namespace InvoicingApp.Entities
 
         public decimal DiscountAmount()
         {
-            return TotalPrice() * (Discount / 100);
+            return TotalPrice() * (Discount / 100m);
         }
 
         public decimal TotalPriceAfterDiscount()
@@ -42,12 +42,12 @@ namespace InvoicingApp.Entities
 
         public decimal VatAmount()
         {
-            return TotalPriceAfterDiscount() * (Vat.Rate / 100);
+            return TotalPriceAfterDiscount() * (Vat.Rate / 100m);
         }
 
         public decimal TotalPriceWithVat()
         {
-            return TotalPrice() + VatAmount();
+            return TotalPriceAfterDiscount() + VatAmount();
         }
     }
 }
