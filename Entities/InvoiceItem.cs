@@ -24,5 +24,30 @@ namespace InvoicingApp.Entities
             Discount = discount;
             Vat = vat;
         }
+
+        public decimal TotalPrice()
+        {
+            return UnitPrice * Amount;
+        }
+
+        public decimal DiscountAmount()
+        {
+            return TotalPrice() * (Discount / 100);
+        }
+
+        public decimal TotalPriceAfterDiscount()
+        {
+            return TotalPrice() - DiscountAmount();
+        }
+
+        public decimal VatAmount()
+        {
+            return TotalPriceAfterDiscount() * (Vat.Rate / 100);
+        }
+
+        public decimal TotalPriceWithVat()
+        {
+            return TotalPrice() + VatAmount();
+        }
     }
 }
