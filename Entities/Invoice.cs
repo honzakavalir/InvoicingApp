@@ -10,14 +10,16 @@ namespace InvoicingApp.Entities
     {
         public int Id { get; set; }
         public string InvoiceNumber { get; set; }
+        public Client Client { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; }
 
-        public Invoice(int id, string invoiceNumber, DateTime issueDate, DateTime dueDate, List<InvoiceItem> invoiceItems)
+        public Invoice(int id, string invoiceNumber, Client client, DateTime issueDate, DateTime dueDate, List<InvoiceItem> invoiceItems)
         {
             Id = id;
             InvoiceNumber = invoiceNumber;
+            Client = client;
             IssueDate = issueDate;
             DueDate = dueDate;
             InvoiceItems = invoiceItems;
