@@ -22,5 +22,30 @@ namespace InvoicingApp.Entities
             DueDate = dueDate;
             InvoiceItems = invoiceItems;
         }
+
+        public decimal TotalPrice()
+        {
+            return InvoiceItems.Sum(item => item.TotalPrice());
+        }
+
+        public decimal TotalDiscount() 
+        {
+            return InvoiceItems.Sum(item => item.DiscountAmount());
+        }
+
+        public decimal TotalPriceAfterDiscount()
+        {
+            return InvoiceItems.Sum(item => item.TotalPriceAfterDiscount());
+        }
+
+        public decimal VatAmount()
+        {
+            return InvoiceItems.Sum(item => item.VatAmount());
+        }
+
+        public decimal TotalPriceWithVat()
+        {
+            return InvoiceItems.Sum(item => item.TotalPriceWithVat());
+        }
     }
 }
