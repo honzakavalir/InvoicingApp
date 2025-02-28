@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InvoicingApp.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,23 +7,21 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Entities
 {
-    public class Invoice
+    public class Invoice : IEntity
     {
         public int Id { get; set; }
         public string InvoiceNumber { get; set; }
         public Client Client { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
-        public List<InvoiceItem> InvoiceItems { get; set; }
+        public List<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
 
-        public Invoice(int id, string invoiceNumber, Client client, DateTime issueDate, DateTime dueDate, List<InvoiceItem> invoiceItems)
+        public Invoice(string invoiceNumber, Client client, DateTime issueDate, DateTime dueDate)
         {
-            Id = id;
             InvoiceNumber = invoiceNumber;
             Client = client;
             IssueDate = issueDate;
             DueDate = dueDate;
-            InvoiceItems = invoiceItems;
         }
 
         public decimal TotalPrice()
