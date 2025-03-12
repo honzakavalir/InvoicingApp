@@ -110,13 +110,7 @@ namespace InvoicingApp.UI
             {
                 foreach (Invoice invoice in invoices)
                 {
-                    Console.WriteLine($"ID faktury: {invoice.Id}");
-                    Console.WriteLine($"Číslo faktury: {invoice.InvoiceNumber}");
-                    Console.WriteLine($"Datum vystavení: {invoice.IssueDate.ToString("dd.MM.yyyy")}");
-                    Console.WriteLine($"Datum splatnosti: {invoice.DueDate.ToString("dd.MM.yyyy")}");
-                    Console.WriteLine($"Zákazník: {invoice.Client.Name}");
-                    Console.WriteLine($"Celková částka bez DPH: {invoice.TotalPriceAfterDiscount().ToString("0.00")} Kč");
-                    Console.WriteLine($"Celková částka včetně DPH: {invoice.TotalPriceWithVat().ToString("0.00")} Kč");
+                    Console.WriteLine(invoice.ToString());
                     Console.WriteLine("-----------------------------------");
                 }
             }

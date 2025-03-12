@@ -36,7 +36,6 @@ namespace InvoicingApp.Services
         {
             public int ClientId { get; set; }
             public int InvoiceId { get; set; }
-            public int VatId { get; set; }
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace InvoicingApp.Services
             else
             {
                 // Pokud soubor neexistuje, vytvoříme nový a inicializujeme ID na 0
-                _lastIds = new LastIds { ClientId = 0, InvoiceId = 0, VatId = 0 };
+                _lastIds = new LastIds { ClientId = 0, InvoiceId = 0 };
                 SaveLastIds();
             }
         }
@@ -85,11 +84,6 @@ namespace InvoicingApp.Services
                     _lastIds.InvoiceId++;
                     SaveLastIds();
                     return _lastIds.InvoiceId;
-
-                case nameof(Vat):
-                    _lastIds.VatId++;
-                    SaveLastIds();
-                    return _lastIds.VatId;
 
                 default:
                     throw new InvalidOperationException("Unknown entity type");

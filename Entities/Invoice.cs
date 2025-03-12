@@ -49,5 +49,16 @@ namespace InvoicingApp.Entities
         {
             return InvoiceItems.Sum(item => item.TotalPriceWithVat());
         }
+
+        public override string ToString()
+        {
+            return $"ID faktury: {Id}\n" +
+                   $"Číslo faktury: {InvoiceNumber}\n" +
+                   $"Datum vystavení: {IssueDate.ToString("dd.MM.yyyy")}\n" +
+                   $"Datum splatnosti: {DueDate.ToString("dd.MM.yyyy")}\n" +
+                   $"Zákazník: {Client?.Name}\n" +
+                   $"Celková částka bez DPH: {TotalPriceAfterDiscount().ToString("0.00")} Kč\n" +
+                   $"Celková částka včetně DPH: {TotalPriceWithVat().ToString("0.00")} Kč";
+        }
     }
 }
