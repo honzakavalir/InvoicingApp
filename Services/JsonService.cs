@@ -69,12 +69,6 @@ namespace InvoicingApp.Services
             // Najdu entitu podle ID
             var entity = entities.FirstOrDefault(e => GetEntityId(e) == id);
 
-            // Pokud entita není nalezena, vyvolám výjimku
-            if (entity == null)
-            {
-                throw new InvalidOperationException($"Entity with ID {id} not found.");
-            }
-
             return entity;
 
         }

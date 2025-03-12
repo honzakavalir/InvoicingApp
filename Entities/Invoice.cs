@@ -11,17 +11,18 @@ namespace InvoicingApp.Entities
     {
         public int Id { get; set; }
         public string InvoiceNumber { get; set; }
-        public Client Client { get; set; }
+        public Client? Client { get; set; }
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
 
-        public Invoice(string invoiceNumber, Client client, DateTime issueDate, DateTime dueDate)
+        public Invoice()
         {
-            InvoiceNumber = invoiceNumber;
-            Client = client;
-            IssueDate = issueDate;
-            DueDate = dueDate;
+            Id = 0;
+            InvoiceNumber = string.Empty;
+            Client = null;
+            IssueDate = DateTime.Now;
+            DueDate = DateTime.Now.AddDays(14);
         }
 
         public decimal TotalPrice()

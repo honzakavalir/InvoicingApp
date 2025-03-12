@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Services
 {
+    /// <summary>
+    /// Třída, která se stará o práci s ID entit
+    /// - generování ID
+    /// - ukládání posledních ID do souboru
+    /// </summary>
     public class AutoIncrementService
     {
         // Soubor na uchovávání posledních ID entit
@@ -31,7 +36,6 @@ namespace InvoicingApp.Services
         {
             public int ClientId { get; set; }
             public int InvoiceId { get; set; }
-            public int InvoiceItemId { get; set; }
             public int VatId { get; set; }
         }
 
@@ -48,7 +52,7 @@ namespace InvoicingApp.Services
             else
             {
                 // Pokud soubor neexistuje, vytvoříme nový a inicializujeme ID na 0
-                _lastIds = new LastIds { ClientId = 0, InvoiceId = 0, InvoiceItemId = 0, VatId = 0 };
+                _lastIds = new LastIds { ClientId = 0, InvoiceId = 0, VatId = 0 };
                 SaveLastIds();
             }
         }
@@ -81,11 +85,6 @@ namespace InvoicingApp.Services
                     _lastIds.InvoiceId++;
                     SaveLastIds();
                     return _lastIds.InvoiceId;
-
-                case nameof(InvoiceItem):
-                    _lastIds.InvoiceItemId++;
-                    SaveLastIds();
-                    return _lastIds.InvoiceItemId;
 
                 case nameof(Vat):
                     _lastIds.VatId++;
