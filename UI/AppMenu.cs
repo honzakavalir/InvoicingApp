@@ -9,31 +9,23 @@ namespace InvoicingApp.UI
     /// <summary>
     /// Hlavní menu aplikace
     /// </summary>
-    public class AppMenu
+    public class AppMenu : BaseMenu
     {
-        // Proměnná, která řídí jestli aplikace běží nebo ne
-        private bool IsAppMenuRunning { get; set; } = true;
 
-        // Menu pro faktury
+        /// <summary>
+        /// Menu faktur
+        /// </summary>
         private InvoiceMenu InvoiceMenu { get; set; } = new InvoiceMenu();
 
         /// <summary>
-        /// Metoda pro spuštění hlavního menu
+        /// Menu klientů
         /// </summary>
-        public void Run()
-        {
-            // Dokud běží aplikace vykresluj hlavní menu a očekávej vstup od uživatele
-            while (IsAppMenuRunning)
-            {
-                Render();
-                HandleUserInput();
-            }
-        }
+        private ClientMenu ClientMenu { get; set; } = new ClientMenu();
 
         /// <summary>
         /// Vykreslení hlavního menu
         /// </summary>
-        private void Render()
+        protected override void Render()
         {
             Console.Clear();
             Console.WriteLine("=== Fakturační program ===");
@@ -44,9 +36,9 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Očekávání vstupu uživatele
+        /// Zpracování vstupu od uživatele
         /// </summary>
-        private void HandleUserInput()
+        protected override void HandleUserInput()
         {
             // Přečti stisknutou klávesu
             ConsoleKeyInfo keyInfo = Console.ReadKey();
@@ -61,7 +53,7 @@ namespace InvoicingApp.UI
                     break;
                 case ConsoleKey.D2:
                 case ConsoleKey.NumPad2:
-                    Pause();
+                    ClientMenu.Run();
                     break;
                 case ConsoleKey.D3:
                 case ConsoleKey.NumPad3:
@@ -72,24 +64,6 @@ namespace InvoicingApp.UI
                     Pause();
                     break;
             }
-        }
-
-        /// <summary>
-        /// Ukončení hlavního menu = ukončení programu
-        /// </summary>
-        private void Exit()
-        {
-            Console.WriteLine("\nUkončuji program...");
-            IsAppMenuRunning = false;
-        }
-
-        /// <summary>
-        /// Pozastavení
-        /// </summary>
-        private void Pause()
-        {
-            Console.WriteLine("\nStiskněte libovolnou klávesu pro návrat do menu...");
-            Console.ReadKey();
         }
     }
 }

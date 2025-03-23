@@ -11,32 +11,19 @@ namespace InvoicingApp.UI
     /// <summary>
     /// Menu pro faktury
     /// </summary>
-    public class InvoiceMenu
+    public class InvoiceMenu : BaseMenu
     {
-        // Proměnná pro sledování stavu menu faktur
-        private bool IsInvoiceMenuRunning { get; set; }
-
-        // Service pro práci s fakturami
-        private InvoiceService InvoiceService { get; set; } = new InvoiceService();
 
         /// <summary>
-        /// Spuštění menu faktur
+        /// Service pro práci s fakturami
         /// </summary>
-        public void Run()
-        {
-            // Nastavím, že menu faktur běží a poté vykreslím a čekám na vstup od uživatele
-            IsInvoiceMenuRunning = true;
-            while (IsInvoiceMenuRunning)
-            {
-                Render();
-                HandleUserInput();
-            }
-        }
+        private InvoiceService InvoiceService { get; set; } = new InvoiceService();
+
 
         /// <summary>
         /// Vykreslení menu faktur
         /// </summary>
-        private void Render()
+        protected override void Render()
         {
             Console.Clear();
             Console.WriteLine("=== Faktury ===");
@@ -50,9 +37,9 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Čekám na vstup od uživatele
+        /// Zpracování vstupu od uživatele
         /// </summary>
-        private void HandleUserInput()
+        protected override void HandleUserInput()
         {
             // Zachytím stisknutou klávesu
             ConsoleKeyInfo keyInfo = Console.ReadKey();
@@ -93,7 +80,7 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Otevřu seznam všech faktur
+        /// Otevření seznamu všech faktur
         /// </summary>
         private void OpenInvoiceList() 
         {
@@ -118,7 +105,7 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Otevřu detail faktury
+        /// Otevření detailu faktury
         /// </summary>
         private void OpenInvoiceDetail()
         {
@@ -150,7 +137,7 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Vytvořím fakturu
+        /// Vytvoření faktury
         /// </summary>
         private void CreateInvoice()
         {
@@ -161,7 +148,7 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Vykreslím detail faktury
+        /// Vykreslení detailu faktury
         /// </summary>
         /// <param name="invoice">Faktura</param>
         private void RenderInvoiceDetail(Invoice invoice)
@@ -180,7 +167,7 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
-        /// Vykreslím položky faktury
+        /// Vykreslení položek faktury
         /// </summary>
         /// <param name="invoice">Faktura</param>
         private void RenderInvoiceItems(Invoice invoice)
@@ -190,23 +177,6 @@ namespace InvoicingApp.UI
             {
                 Console.WriteLine(item.ToString());
             }
-        }
-
-        /// <summary>
-        /// Zavře menu faktur
-        /// </summary>
-        private void Exit()
-        {
-            IsInvoiceMenuRunning = false;
-        }
-
-        /// <summary>
-        /// Pozastavení
-        /// </summary>
-        private void Pause()
-        {
-            Console.WriteLine("\nStiskněte libovolnou klávesu pro návrat do menu...");
-            Console.ReadKey();
         }
     }
 }

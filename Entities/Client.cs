@@ -1,4 +1,5 @@
 ﻿using InvoicingApp.Interfaces;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,20 @@ namespace InvoicingApp.Entities
         public string? IdentificationNumber { get; set; }
         public string? VatNumber { get; set; }
 
+        public Client()
+        {
+            Id = 0;
+            Name = string.Empty;
+            Address = string.Empty;
+            City = string.Empty;
+            PostalCode = string.Empty;
+            Country = string.Empty;
+            Email = string.Empty;
+            Phone = string.Empty;
+            IdentificationNumber = string.Empty;
+            VatNumber = string.Empty;
+        }
+
         public Client(int id, string name, string address, string city, string postalCode, string country, string email, string phone, string? identificationNumber, string? vatNumber)
         {
             Id = id;
@@ -32,6 +47,17 @@ namespace InvoicingApp.Entities
             Phone = phone;
             IdentificationNumber = identificationNumber;
             VatNumber = vatNumber;
+        }
+
+        public override string ToString()
+        {
+            return $"ID klienta: {Id}\n" +
+                   $"Jméno: {Name}\n" +
+                   $"Adresa: {Address}, {PostalCode}, {City}, {Country}\n" +
+                   $"Email: {Email}\n" +
+                   $"Telefon: {Phone}\n" +
+                   $"IČO: {IdentificationNumber}\n" +
+                   $"DIČ: {VatNumber}";
         }
     }
 }
