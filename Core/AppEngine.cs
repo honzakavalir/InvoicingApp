@@ -19,6 +19,7 @@ namespace InvoicingApp.Core
 
         public void Start()
         {
+            VatService.InitializeVatFile();
             AppMenu.Run();
         }
 

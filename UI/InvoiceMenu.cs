@@ -19,6 +19,11 @@ namespace InvoicingApp.UI
         /// </summary>
         private InvoiceService InvoiceService { get; set; } = new InvoiceService();
 
+        /// <summary>
+        /// Service pro práci s klienty
+        /// </summary>
+        private ClientService ClientService { get; set; } = new ClientService();
+
 
         /// <summary>
         /// Vykreslení menu faktur
@@ -143,7 +148,60 @@ namespace InvoicingApp.UI
         {
             Console.Clear();
             Console.WriteLine("=== Vytvoření faktury ===");
-            Invoice invoice = new Invoice();
+            Console.Write("Zadejte ID klienta, kterému chcete vytvořit fakturu: ");
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int clientId))
+            {
+                Client client = ClientService.GetById(clientId);
+
+                if (client == null)
+                {
+                    Console.WriteLine("Klient s tímto ID neexistuje.");
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("=== Detail klienta ===");
+                    Console.WriteLine(client.ToString());
+                    Console.WriteLine();
+                    Console.WriteLine("=== Zadejte údaje o faktuře ===");
+                    Invoice invoice = new Invoice();
+                    invoice.Client = client;
+                    invoice.InvoiceNumber = ReadInput("Zadejte číslo faktury: ");
+
+                    DateTime? issueDate;
+                    do
+                    {
+                        issueDate = ConvertToDateTime(ReadInput("Zadejte datum vystavení (dd.MM.yyyy): "));
+
+                        if (issueDate.HasValue)
+                        {
+                            invoice.IssueDate = issueDate.Value;
+                            break;
+                        }
+                    } while (true);
+
+                    DateTime? dueDate;
+                    do
+                    {
+                        dueDate = ConvertToDateTime(ReadInput("Zadejte datum splatnosti (dd.MM.yyyy): "));
+
+                        if (dueDate.HasValue)
+                        {
+                            invoice.DueDate = dueDate.Value;
+                            break;
+                        }
+                    } while (true);
+
+                    AddInvoiceItem(invoice);
+                    Pause();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Neplatné ID klienta.");
+            }
             Pause();
         }
 
@@ -155,13 +213,7 @@ namespace InvoicingApp.UI
         {
             Console.Clear();
             Console.WriteLine("=== Detail faktury ===");
-            Console.WriteLine($"ID faktury: {invoice.Id}");
-            Console.WriteLine($"Číslo faktury: {invoice.InvoiceNumber}");
-            Console.WriteLine($"Datum vystavení: {invoice.IssueDate.ToString("dd.MM.yyyy")}");
-            Console.WriteLine($"Datum splatnosti: {invoice.DueDate.ToString("dd.MM.yyyy")}");
-            Console.WriteLine($"Zákazník: {invoice.Client.Name}");
-            Console.WriteLine($"Celková částka bez DPH: {invoice.TotalPriceAfterDiscount()} Kč");
-            Console.WriteLine($"Celková částka včetně DPH: {invoice.TotalPriceWithVat()} Kč");
+            Console.WriteLine(invoice.ToString());
             Console.WriteLine();
             RenderInvoiceItems(invoice);
         }
@@ -177,6 +229,18 @@ namespace InvoicingApp.UI
             {
                 Console.WriteLine(item.ToString());
             }
+        }
+
+        /// <summary>
+        /// Přidání položky do faktury
+        /// </summary>
+        /// <param name="invoice">Faktura</param>
+        private void AddInvoiceItem(Invoice invoice)
+        {
+            Console.WriteLine();
+            Console.WriteLine("=== Přidat položku faktury ===");
+            InvoiceItem item = new InvoiceItem();
+            item.Name = ReadInput("Název: ");
         }
     }
 }

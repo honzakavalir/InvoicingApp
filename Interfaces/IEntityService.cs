@@ -9,7 +9,6 @@ namespace InvoicingApp.Interfaces
     /// <summary>
     /// Rozhraní pro entity service
     /// - obecná definice entity service
-    /// - každá service, která pracuje s entitami musí realizovat toto rozhraní
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IEntityService<T> where T : IEntity

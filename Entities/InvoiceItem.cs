@@ -1,4 +1,5 @@
 ﻿using InvoicingApp.Interfaces;
+using InvoicingApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,15 @@ namespace InvoicingApp.Entities
         public int Amount { get; set; }
         public int Discount { get; set; }
         public Vat Vat { get; set; }
+
+        public InvoiceItem() 
+        { 
+            Name = string.Empty;
+            UnitPrice = 0;
+            Amount = 0;
+            Discount = 0;
+            Vat = VatService.FindBySlug("basic");
+        }
 
         public InvoiceItem(string name, decimal unitPrice, int amount, int discount, Vat vat)
         {

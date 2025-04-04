@@ -100,5 +100,25 @@ namespace InvoicingApp.UI
             }
         }
 
+        /// <summary>
+        /// Metoda, která převede date string na datum
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="format"></param>
+        protected DateTime? ConvertToDateTime(string input, string format = "dd.MM.yyyy")
+        {
+            DateTime parsedDate;
+
+            if (DateTime.TryParseExact(input, format, null, System.Globalization.DateTimeStyles.None, out parsedDate))
+            {
+                return parsedDate; 
+            }
+            else
+            {
+                Console.WriteLine($"Neplatný formát data. Očekává se formát {format}.");
+                return null;
+            }
+        }
+
     }
 }

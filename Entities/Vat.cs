@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Entities
 {
+
     public class Vat : IEntity
     {
         public int Id { get; set; }
