@@ -67,11 +67,11 @@ namespace InvoicingApp.UI
                     break;
                 case ConsoleKey.D4:
                 case ConsoleKey.NumPad4:
-                    Pause();
+                    EditInvoice();
                     break;
                 case ConsoleKey.D5:
                 case ConsoleKey.NumPad5:
-                    Pause();
+                    DeleteInvoice();
                     break;
                 case ConsoleKey.D6:
                 case ConsoleKey.NumPad6:
@@ -89,10 +89,10 @@ namespace InvoicingApp.UI
         /// </summary>
         private void OpenInvoiceList() 
         {
-            List<Invoice> invoices = InvoiceService.GetAll();
-
             Console.Clear();
             Console.WriteLine("=== Všechny faktury ===");
+
+            List<Invoice> invoices = InvoiceService.GetAll();
 
             if (invoices.Count == 0)
             {
@@ -194,8 +194,9 @@ namespace InvoicingApp.UI
                         }
                     } while (true);
 
+                    InvoiceService.Create(invoice);
+
                     AddInvoiceItem(invoice);
-                    Pause();
                 }
             }
             else
@@ -238,9 +239,279 @@ namespace InvoicingApp.UI
         private void AddInvoiceItem(Invoice invoice)
         {
             Console.WriteLine();
-            Console.WriteLine("=== Přidat položku faktury ===");
-            InvoiceItem item = new InvoiceItem();
-            item.Name = ReadInput("Název: ");
+
+            do
+            {
+                Console.WriteLine("=== Přidat položku faktury ===");
+                InvoiceItem item = new InvoiceItem();
+
+                item.Name = ReadInput("Název: ");
+                item.Amount = ReadIntegerInput("Počet: ");
+                item.UnitPrice = ReadDecimalInput("Jednotková cena (Kč): ");
+                item.Discount = ReadIntegerInput("Sleva (%): ", true, 0, 100);
+
+                Console.WriteLine("Chcete aplikovat snížené DPH? (A/N)");
+                ConsoleKeyInfo reducedVat = Console.ReadKey();
+                Console.WriteLine();
+
+                if (reducedVat.Key == ConsoleKey.A)
+                {
+                    Vat vat = VatService.FindBySlug("reduced");
+                    item.Vat = vat;
+                    Console.WriteLine("Byla aplikována sazba DPH: " + vat.Name);
+                }
+                else
+                {
+                    Vat vat = VatService.FindBySlug("basic");
+                    item.Vat = vat;
+                    Console.WriteLine("Byla aplikována sazba DPH: " + vat.Name);
+                }
+
+                InvoiceService.AddItem(invoice, item);
+                Console.WriteLine("Položka byla přidána.");
+                Console.WriteLine();
+
+                Console.WriteLine("Chcete přidat další položku? (A/N)");
+                ConsoleKeyInfo addAnother = Console.ReadKey();
+                Console.WriteLine();
+
+                if (addAnother.Key != ConsoleKey.A)
+                    break;
+
+                Console.WriteLine();
+
+            } while (true);
+
+            RenderInvoiceDetail(invoice);
+        }
+
+        /// <summary>
+        /// Upravení faktury
+        /// </summary>
+        private void EditInvoice()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Úprava faktury ===");
+            Console.Write("Zadejte ID faktury: ");
+
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int invoiceId))
+            {
+                Invoice invoice = InvoiceService.GetById(invoiceId);
+
+                if (invoice == null)
+                {
+                    Console.WriteLine("Faktura s tímto ID neexistuje.");
+                }
+                else
+                {
+                    Console.WriteLine("\n=== Detail faktury ===");
+                    Console.WriteLine(invoice.ToString());
+                    Console.WriteLine();
+                    RenderInvoiceItems(invoice);
+
+                    Console.WriteLine();
+                    Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
+
+                    UpdateProperty("Zadejte číslo faktury: ", newValue => invoice.InvoiceNumber = newValue);
+
+                    DateTime? issueDate;
+                    do
+                    {
+                        string issueDateString = ReadInput("Zadejte datum vystavení (dd.MM.yyyy): ", false);
+
+                        if (string.IsNullOrEmpty(issueDateString))
+                        {
+                            break;
+                        }
+
+                        issueDate = ConvertToDateTime(issueDateString);
+
+                        if (issueDate.HasValue)
+                        {
+                            invoice.IssueDate = issueDate.Value;
+                            break;
+                        }
+                    } while (true);
+
+                    DateTime? dueDate;
+                    do
+                    {
+                        string dueDateString = ReadInput("Zadejte datum splatnosti (dd.MM.yyyy): ", false);
+
+                        if (string.IsNullOrEmpty(dueDateString)) 
+                        {
+                            break;
+                        }
+
+                        dueDate = ConvertToDateTime(dueDateString);
+
+                        if (dueDate.HasValue)
+                        {
+                            invoice.DueDate = dueDate.Value;
+                            break;
+                        }
+                    } while (true);
+
+                    Console.WriteLine();
+                    Console.WriteLine("Chcete změnit klienta? (A/N): ");
+                    ConsoleKeyInfo confirmationChangeClient = Console.ReadKey();
+
+                    if (confirmationChangeClient.Key == ConsoleKey.A)
+                    {
+                        Console.WriteLine();
+                        Console.Write("Zadejte ID klienta: ");
+                        string inputClient = Console.ReadLine();
+
+                        if (int.TryParse(inputClient, out int clientId))
+                        {
+                            Client client = ClientService.GetById(clientId);
+
+                            if (client == null)
+                            {
+                                Console.WriteLine("Klient s tímto ID neexistuje.");
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine("=== Detail klienta ===");
+                                Console.WriteLine(client.ToString());
+                                Console.WriteLine();
+                                Console.WriteLine("Opravdu chcete změnit klienta? (A/N): ");
+                                ConsoleKeyInfo confirmationNewClient = Console.ReadKey();
+
+                                if (confirmationNewClient.Key == ConsoleKey.A)
+                                {
+                                    invoice.Client = client;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Neplatné ID klienta.");
+                        }
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Chcete upravit položky faktury? (A/N): ");
+                    ConsoleKeyInfo confirmationChangeItems = Console.ReadKey();
+
+                    if (confirmationChangeItems.Key == ConsoleKey.A)
+                    {
+                        Console.WriteLine();
+                        Console.Write("Zadejte ID položky: ");
+                        string inputItem = Console.ReadLine();
+
+                        if (int.TryParse(inputItem, out int itemId))
+                        {
+                            InvoiceItem? item = invoice.InvoiceItems.FirstOrDefault(item => item.Id == itemId);
+                            if (item == null)
+                            {
+                                Console.WriteLine("Položka s tímto ID neexistuje.");
+                                Pause();
+                            } 
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine(item.ToString());
+                                Console.WriteLine();
+                                Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
+                                string name = ReadInput("Název: ", false);
+                                if (!string.IsNullOrEmpty(name))
+                                {
+                                    item.Name = name;
+                                }
+
+                                int amount = ReadIntegerInput("Počet: ", false, 1);
+                                if (amount != 0)
+                                {
+                                    item.Amount = amount;
+                                }
+
+                                decimal unitPrice = ReadDecimalInput("Jednotková cena (Kč): ", false);
+                                if (unitPrice != 0)
+                                {
+                                    item.UnitPrice = unitPrice;
+                                }
+
+                                int discount = ReadIntegerInput("Sleva (%): ", false, 0, 100);
+                                if (item.Discount != discount)
+                                {
+                                    item.Discount = discount;
+                                }
+
+                                Console.WriteLine();
+                                Console.WriteLine("Položka byla úspěšně upravena.");
+                                Pause();
+                            }
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Neplatné ID klienta.");
+                        }
+                    }
+
+
+                    InvoiceService.Update(invoice);
+                    RenderInvoiceDetail(invoice);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Neplatné ID klienta.");
+            }
+
+            Pause();
+        }
+
+        /// <summary>
+        /// Smazání faktury
+        /// </summary>
+        private void DeleteInvoice()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Smazání faktury ===");
+            Console.Write("Zadejte ID faktury: ");
+
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int invoiceId))
+            {
+                Invoice invoice = InvoiceService.GetById(invoiceId);
+
+                if (invoice == null)
+                {
+                    Console.WriteLine("Faktura s tímto ID neexistuje.");
+                }
+                else
+                {
+                    Console.WriteLine("\n=== Detail faktury ===");
+                    Console.WriteLine(invoice.ToString());
+
+                    Console.Write("\nOpravdu chcete smazat tuto fakturu? (A/N): ");
+                    ConsoleKeyInfo confirmation = Console.ReadKey();
+
+                    if (confirmation.Key == ConsoleKey.A)
+                    {
+                        InvoiceService.Delete(invoiceId);
+                        Console.WriteLine();
+                        Console.WriteLine("Faktura byla úspěšně smazána.");
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Smazání faktury bylo zrušeno.");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Neplatné ID faktury.");
+            }
+
+            Pause();
         }
     }
 }

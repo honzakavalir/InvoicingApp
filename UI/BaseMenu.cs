@@ -83,6 +83,104 @@ namespace InvoicingApp.UI
         }
 
         /// <summary>
+        /// Metoda přečte číselný vstup od uživatele a vrátí ho jako int
+        /// </summary>
+        /// <param name="prompt">Text vstupu</param>
+        /// <param name="required">Je parametr povinný</param>
+        /// <param name="min">Volitelná minimální hodnota (včetně).</param>
+        /// <param name="max">Volitelná maximální hodnota (včetně).</param>
+        /// <returns>Číslo zadané uživatelem</returns>
+        protected int ReadIntegerInput(string prompt, bool required = true, int? min = null, int? max = null)
+        {
+            string input;
+            int number;
+
+            do
+            {
+                Console.Write(prompt);
+                input = Console.ReadLine()?.Trim();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    if (!required) return 0;
+                    Console.WriteLine("Tato hodnota je povinná, prosím zadejte ji znovu.");
+                    continue;
+                }
+
+                if (!int.TryParse(input, out number))
+                {
+                    Console.WriteLine("Zadejte platné celé číslo.");
+                    continue;
+                }
+
+                if (min.HasValue && number < min.Value)
+                {
+                    Console.WriteLine($"Zadané číslo musí být alespoň {min.Value}.");
+                    continue;
+                }
+
+                if (max.HasValue && number > max.Value)
+                {
+                    Console.WriteLine($"Zadané číslo nesmí být větší než {max.Value}.");
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            return number;
+        }
+
+        /// <summary>
+        /// Metoda načte číselný vstup od uživatele a vrátí ho jako decimal
+        /// </summary>
+        /// <param name="prompt">Text vstupu</param>
+        /// <param name="required">Je parametr povinný</param>
+        /// <param name="min">Volitelná minimální hodnota (včetně).</param>
+        /// <param name="max">Volitelná maximální hodnota (včetně).</param>
+        /// <returns>Vrací desetinné číslo zadané uživatelem.</returns>
+        protected decimal ReadDecimalInput(string prompt, bool required = true, decimal? min = null, decimal? max = null)
+        {
+            string input;
+            decimal number;
+
+            do
+            {
+                Console.Write(prompt);
+                input = Console.ReadLine()?.Trim();
+
+                if (string.IsNullOrEmpty(input))
+                {
+                    if (!required) return 0;
+                    Console.WriteLine("Tato hodnota je povinná, prosím zadejte ji znovu.");
+                    continue;
+                }
+
+                if (!decimal.TryParse(input, out number))
+                {
+                    Console.WriteLine("Zadejte platné číslo (desetinné oddělujte čárkou nebo tečkou podle systému).");
+                    continue;
+                }
+
+                if (min.HasValue && number < min.Value)
+                {
+                    Console.WriteLine($"Zadané číslo musí být alespoň {min.Value}.");
+                    continue;
+                }
+
+                if (max.HasValue && number > max.Value)
+                {
+                    Console.WriteLine($"Zadané číslo nesmí být větší než {max.Value}.");
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            return number;
+        }
+
+        /// <summary>
         /// Metoda, která aktualizuje vlastnost objektu na základě vstupu od uživatele
         /// </summary>
         /// <param name="prompt">Text vstupu</param>
