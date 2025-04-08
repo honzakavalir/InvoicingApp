@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Entities
 {
+    /// <summary>
+    /// Klient
+    /// </summary>
     public class Client : IEntity
     {
         public int Id { get; set; }

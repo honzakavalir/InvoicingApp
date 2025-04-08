@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Entities
 {
+    /// <summary>
+    /// Faktura
+    /// </summary>
     public class Invoice : IEntity
     {
         public int Id { get; set; }
@@ -25,26 +28,46 @@ namespace InvoicingApp.Entities
             DueDate = DateTime.Now.AddDays(14);
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu faktury
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPrice()
         {
             return InvoiceItems.Sum(item => item.TotalPrice());
         }
 
+        /// <summary>
+        /// Vypočítá celkovou slevu
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalDiscount() 
         {
             return InvoiceItems.Sum(item => item.DiscountAmount());
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu faktury po slevě
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPriceAfterDiscount()
         {
             return InvoiceItems.Sum(item => item.TotalPriceAfterDiscount());
         }
 
+        /// <summary>
+        /// Vypočítá celkovou daň
+        /// </summary>
+        /// <returns></returns>
         public decimal VatAmount()
         {
             return InvoiceItems.Sum(item => item.VatAmount());
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu včetně daně
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPriceWithVat()
         {
             return InvoiceItems.Sum(item => item.TotalPriceWithVat());

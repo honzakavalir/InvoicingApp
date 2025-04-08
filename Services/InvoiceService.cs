@@ -68,6 +68,17 @@ namespace InvoicingApp.Services
         {
             return JsonService.GetAll<Invoice>();
         }
+
+        /// <summary>
+        /// Vrátí všechny faktury daného klienta
+        /// </summary>
+        /// <param name="client">Klient</param>
+        /// <returns></returns>
+        public List<Invoice> GetAllByClient(Client client)
+        {
+            List<Invoice> allInvoices = GetAll();
+            return allInvoices.Where(invoice => invoice.Client.Id == client.Id).ToList();
+        }
         
         /*
          * Metody pro práci s položkami faktury

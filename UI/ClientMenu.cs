@@ -19,6 +19,11 @@ namespace InvoicingApp.UI
         private ClientService ClientService { get; set; } = new ClientService();
 
         /// <summary>
+        /// Service pro práci s fakturami
+        /// </summary>
+        private InvoiceService InvoiceService { get; set; } = new InvoiceService();
+
+        /// <summary>
         /// Vykreslení menu klientů
         /// </summary>
         protected override void Render()
@@ -143,6 +148,22 @@ namespace InvoicingApp.UI
             Console.Clear();
             Console.WriteLine("=== Detail klienta ===");
             Console.WriteLine(client.ToString());
+            Console.WriteLine();
+
+            List<Invoice> invoices = InvoiceService.GetAllByClient(client);
+            Console.WriteLine("Faktury klienta:");
+            if (invoices.Count == 0)
+            {
+                Console.WriteLine("Žádné faktury k zobrazení");
+            } 
+            else
+            {
+                foreach (Invoice invoice in invoices) 
+                {
+                    Console.WriteLine(invoice.ToString());
+                    Console.WriteLine("-------------------");
+                }
+            }
         }
 
         /// <summary>

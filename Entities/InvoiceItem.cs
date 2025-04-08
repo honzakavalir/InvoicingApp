@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace InvoicingApp.Entities
 {
+    /// <summary>
+    /// Položka faktury
+    /// </summary>
     public class InvoiceItem : IEntity
     {
         public int Id { get; set; }
@@ -35,26 +38,46 @@ namespace InvoicingApp.Entities
             Vat = vat;
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu položky
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPrice()
         {
             return UnitPrice * Amount;
         }
 
+        /// <summary>
+        /// Vypočítá celkovou slevu položky
+        /// </summary>
+        /// <returns></returns>
         public decimal DiscountAmount()
         {
             return TotalPrice() * (Discount / 100m);
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu položky po slevě
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPriceAfterDiscount()
         {
             return TotalPrice() - DiscountAmount();
         }
 
+        /// <summary>
+        /// Vypočítá celkovou daň
+        /// </summary>
+        /// <returns></returns>
         public decimal VatAmount()
         {
             return TotalPriceAfterDiscount() * (Vat.Rate / 100m);
         }
 
+        /// <summary>
+        /// Vypočítá celkovou cenu včetně daně
+        /// </summary>
+        /// <returns></returns>
         public decimal TotalPriceWithVat()
         {
             return TotalPriceAfterDiscount() + VatAmount();

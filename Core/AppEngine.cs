@@ -17,6 +17,9 @@ namespace InvoicingApp.Core
     {
         public AppMenu AppMenu { get; set; } = new AppMenu();
 
+        /// <summary>
+        /// Spustí hlavní menu aplikace a inicializuje sazby DPH
+        /// </summary>
         public void Start()
         {
             VatService.InitializeVatFile();

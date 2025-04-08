@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace InvoicingApp.Entities
 {
 
+    /// <summary>
+    /// Sazba DPH
+    /// </summary>
     public class Vat : IEntity
     {
         public int Id { get; set; }
