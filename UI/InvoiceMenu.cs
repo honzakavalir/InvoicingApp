@@ -399,58 +399,84 @@ namespace InvoicingApp.UI
 
                     if (confirmationChangeItems.Key == ConsoleKey.A)
                     {
-                        Console.WriteLine();
-                        Console.Write("Zadejte ID položky: ");
-                        string inputItem = Console.ReadLine();
-
-                        if (int.TryParse(inputItem, out int itemId))
+                        ConsoleKey anotherEdit;
+                        do
                         {
-                            InvoiceItem? item = invoice.InvoiceItems.FirstOrDefault(item => item.Id == itemId);
-                            if (item == null)
+                            Console.WriteLine();
+                            Console.Write("Zadejte ID položky: ");
+                            string inputItem = Console.ReadLine();
+
+                            if (int.TryParse(inputItem, out int itemId))
                             {
-                                Console.WriteLine("Položka s tímto ID neexistuje.");
-                                Pause();
-                            } 
+                                InvoiceItem? item = invoice.InvoiceItems.FirstOrDefault(item => item.Id == itemId);
+                                if (item == null)
+                                {
+                                    Console.WriteLine("Položka s tímto ID neexistuje.");
+                                    Pause();
+                                }
+                                else
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine(item.ToString());
+                                    Console.WriteLine();
+                                    Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
+
+                                    string name = ReadInput("Název: ", false);
+                                    if (!string.IsNullOrEmpty(name))
+                                    {
+                                        item.Name = name;
+                                    }
+
+                                    int amount = ReadIntegerInput("Počet: ", false, 1);
+                                    if (amount != 0)
+                                    {
+                                        item.Amount = amount;
+                                    }
+
+                                    decimal unitPrice = ReadDecimalInput("Jednotková cena (Kč): ", false);
+                                    if (unitPrice != 0)
+                                    {
+                                        item.UnitPrice = unitPrice;
+                                    }
+
+                                    int discount = ReadIntegerInput("Sleva (%): ", false, 0, 100);
+                                    if (item.Discount != discount)
+                                    {
+                                        item.Discount = discount;
+                                    }
+
+                                    Console.WriteLine("Chcete aplikovat snížené DPH? (A/N)");
+                                    ConsoleKeyInfo reducedVat = Console.ReadKey();
+                                    Console.WriteLine();
+
+                                    if (reducedVat.Key == ConsoleKey.A)
+                                    {
+                                        Vat vat = VatService.FindBySlug("reduced");
+                                        item.Vat = vat;
+                                        Console.WriteLine("Byla aplikována sazba DPH: " + vat.Name);
+                                    }
+                                    else
+                                    {
+                                        Vat vat = VatService.FindBySlug("basic");
+                                        item.Vat = vat;
+                                        Console.WriteLine("Byla aplikována sazba DPH: " + vat.Name);
+                                    }
+
+                                    Console.WriteLine();
+                                    Console.WriteLine("Položka byla úspěšně upravena.");
+                                }
+                            }
                             else
                             {
-                                Console.WriteLine();
-                                Console.WriteLine(item.ToString());
-                                Console.WriteLine();
-                                Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
-                                string name = ReadInput("Název: ", false);
-                                if (!string.IsNullOrEmpty(name))
-                                {
-                                    item.Name = name;
-                                }
-
-                                int amount = ReadIntegerInput("Počet: ", false, 1);
-                                if (amount != 0)
-                                {
-                                    item.Amount = amount;
-                                }
-
-                                decimal unitPrice = ReadDecimalInput("Jednotková cena (Kč): ", false);
-                                if (unitPrice != 0)
-                                {
-                                    item.UnitPrice = unitPrice;
-                                }
-
-                                int discount = ReadIntegerInput("Sleva (%): ", false, 0, 100);
-                                if (item.Discount != discount)
-                                {
-                                    item.Discount = discount;
-                                }
-
-                                Console.WriteLine();
-                                Console.WriteLine("Položka byla úspěšně upravena.");
-                                Pause();
+                                Console.WriteLine("Neplatné ID klienta.");
                             }
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("Neplatné ID klienta.");
-                        }
+                            Console.WriteLine();
+                            Console.Write("Chcete upravit další položku? (A/N): ");
+                            anotherEdit = Console.ReadKey().Key;
+                            Console.WriteLine();
+
+                        } while (anotherEdit == ConsoleKey.A);
                     }
 
 

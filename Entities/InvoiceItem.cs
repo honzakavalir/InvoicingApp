@@ -62,7 +62,7 @@ namespace InvoicingApp.Entities
 
         public override string ToString()
         {
-            return $"ID: {Id} | Název: {Name} | Počet: {Amount} ks | Jedn. cena: {UnitPrice.ToString("0.00")} Kč/ks | Sleva: {Discount} % | Cena bez DPH: {TotalPriceAfterDiscount().ToString("0.00")} Kč | Cena včetně DPH: {TotalPriceWithVat().ToString("0.00")} Kč";
+            return $"ID: {Id} | Název: {Name} | Počet: {Amount} ks | Jedn. cena: {UnitPrice.ToString("0.00")} Kč/ks | Sleva: {Discount} % | DPH: {Vat.Rate} % | Cena bez DPH: {TotalPriceAfterDiscount().ToString("0.00")} Kč | Cena včetně DPH: {TotalPriceWithVat().ToString("0.00")} Kč";
         }
     }
 }
