@@ -115,6 +115,20 @@ namespace InvoicingApp.UI
         private void OpenInvoiceDetail()
         {
             Console.Clear();
+            List<Invoice> invoices = InvoiceService.GetAll();
+
+            if (invoices.Count == 0)
+            {
+                Console.WriteLine("Žádné faktury k zobrazení.");
+            }
+            else
+            {
+                foreach (Invoice invoice in invoices)
+                {
+                    Console.WriteLine(invoice.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
             Console.WriteLine("=== Detail faktury ===");
             Console.Write("Zadejte ID faktury: ");
 
@@ -147,6 +161,21 @@ namespace InvoicingApp.UI
         private void CreateInvoice()
         {
             Console.Clear();
+            List<Client> clients = ClientService.GetAll();
+            Console.WriteLine("=== Klienti v systému ===");
+            if (clients.Count == 0)
+            {
+                Console.WriteLine("V systému nejsou žádní klienti.");
+            }
+            else
+            {
+                foreach (Client client in clients)
+                {
+                    Console.WriteLine(client.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
+            Console.WriteLine();
             Console.WriteLine("=== Vytvoření faktury ===");
             Console.Write("Zadejte ID klienta, kterému chcete vytvořit fakturu: ");
             string input = Console.ReadLine();
@@ -168,7 +197,7 @@ namespace InvoicingApp.UI
                     Console.WriteLine("=== Zadejte údaje o faktuře ===");
                     Invoice invoice = new Invoice();
                     invoice.Client = client;
-                    invoice.InvoiceNumber = ReadInput("Zadejte číslo faktury: ");
+                    invoice.InvoiceNumber = ReadInput("Zadejte číslo faktury: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Číslo faktury může obsahovat pouze písmena a čísla.");
 
                     DateTime? issueDate;
                     do
@@ -177,6 +206,12 @@ namespace InvoicingApp.UI
 
                         if (issueDate.HasValue)
                         {
+                            if (issueDate.Value < new DateTime(2015, 1, 1))
+                            {
+                                Console.WriteLine("Datum nesmí být starší než 01.01.2015. Zadejte prosím novější datum.");
+                                continue;
+                            }
+
                             invoice.IssueDate = issueDate.Value;
                             break;
                         }
@@ -189,6 +224,12 @@ namespace InvoicingApp.UI
 
                         if (dueDate.HasValue)
                         {
+                            if (dueDate.Value <= invoice.IssueDate)
+                            {
+                                Console.WriteLine("Datum splatnosti musí být alespoň o den později než datum vystavení.");
+                                continue;
+                            }
+
                             invoice.DueDate = dueDate.Value;
                             break;
                         }
@@ -234,6 +275,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Přidání položky do faktury
+        /// Regulární výrazy byly vygenerovány AI
         /// </summary>
         /// <param name="invoice">Faktura</param>
         private void AddInvoiceItem(Invoice invoice)
@@ -245,12 +287,12 @@ namespace InvoicingApp.UI
                 Console.WriteLine("=== Přidat položku faktury ===");
                 InvoiceItem item = new InvoiceItem();
 
-                item.Name = ReadInput("Název: ");
+                item.Name = ReadInput("Název: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název položky může obsahovat pouze písmena a čísla.");
                 item.Amount = ReadIntegerInput("Počet: ");
                 item.UnitPrice = ReadDecimalInput("Jednotková cena (Kč): ");
                 item.Discount = ReadIntegerInput("Sleva (%): ", true, 0, 100);
 
-                Console.WriteLine("Chcete aplikovat snížené DPH? (A/N)");
+                Console.WriteLine("Chcete aplikovat snížené DPH? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou klávesu pro aplikování standardní sazby 21 %.)");
                 ConsoleKeyInfo reducedVat = Console.ReadKey();
                 Console.WriteLine();
 
@@ -271,7 +313,7 @@ namespace InvoicingApp.UI
                 Console.WriteLine("Položka byla přidána.");
                 Console.WriteLine();
 
-                Console.WriteLine("Chcete přidat další položku? (A/N)");
+                Console.WriteLine("Chcete přidat další položku? (Stiskněte klávesu A pro přidání další položky nebo jakoukoliv jinou klávesu pro ukončení přidávání položek.)");
                 ConsoleKeyInfo addAnother = Console.ReadKey();
                 Console.WriteLine();
 
@@ -291,6 +333,20 @@ namespace InvoicingApp.UI
         private void EditInvoice()
         {
             Console.Clear();
+            List<Invoice> invoices = InvoiceService.GetAll();
+
+            if (invoices.Count == 0)
+            {
+                Console.WriteLine("Žádné faktury k zobrazení.");
+            }
+            else
+            {
+                foreach (Invoice invoice in invoices)
+                {
+                    Console.WriteLine(invoice.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
             Console.WriteLine("=== Úprava faktury ===");
             Console.Write("Zadejte ID faktury: ");
 
@@ -314,7 +370,7 @@ namespace InvoicingApp.UI
                     Console.WriteLine();
                     Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
 
-                    UpdateProperty("Zadejte číslo faktury: ", newValue => invoice.InvoiceNumber = newValue);
+                    UpdateProperty("Zadejte číslo faktury: ", newValue => invoice.InvoiceNumber = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Číslo faktury může obsahovat pouze písmena a čísla.");
 
                     DateTime? issueDate;
                     do
@@ -330,6 +386,12 @@ namespace InvoicingApp.UI
 
                         if (issueDate.HasValue)
                         {
+                            if (issueDate.Value < new DateTime(2015, 1, 1))
+                            {
+                                Console.WriteLine("Datum nesmí být starší než 01.01.2015. Zadejte prosím novější datum.");
+                                continue;
+                            }
+
                             invoice.IssueDate = issueDate.Value;
                             break;
                         }
@@ -349,17 +411,38 @@ namespace InvoicingApp.UI
 
                         if (dueDate.HasValue)
                         {
+                            if (dueDate.Value <= invoice.IssueDate)
+                            {
+                                Console.WriteLine("Datum splatnosti musí být alespoň o den později než datum vystavení.");
+                                continue;
+                            }
+
                             invoice.DueDate = dueDate.Value;
                             break;
                         }
                     } while (true);
 
                     Console.WriteLine();
-                    Console.WriteLine("Chcete změnit klienta? (A/N): ");
+                    Console.WriteLine("Chcete změnit klienta? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                     ConsoleKeyInfo confirmationChangeClient = Console.ReadKey();
 
                     if (confirmationChangeClient.Key == ConsoleKey.A)
                     {
+                        Console.WriteLine();
+                        List<Client> clients = ClientService.GetAll();
+                        Console.WriteLine("=== Klienti v systému ===");
+                        if (clients.Count == 0)
+                        {
+                            Console.WriteLine("V systému nejsou žádní klienti.");
+                        }
+                        else
+                        {
+                            foreach (Client client in clients)
+                            {
+                                Console.WriteLine(client.ToString());
+                                Console.WriteLine("-----------------------------------");
+                            }
+                        }
                         Console.WriteLine();
                         Console.Write("Zadejte ID klienta: ");
                         string inputClient = Console.ReadLine();
@@ -378,7 +461,7 @@ namespace InvoicingApp.UI
                                 Console.WriteLine("=== Detail klienta ===");
                                 Console.WriteLine(client.ToString());
                                 Console.WriteLine();
-                                Console.WriteLine("Opravdu chcete změnit klienta? (A/N): ");
+                                Console.WriteLine("Opravdu chcete změnit klienta? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                                 ConsoleKeyInfo confirmationNewClient = Console.ReadKey();
 
                                 if (confirmationNewClient.Key == ConsoleKey.A)
@@ -394,7 +477,7 @@ namespace InvoicingApp.UI
                     }
 
                     Console.WriteLine();
-                    Console.WriteLine("Chcete upravit položky faktury? (A/N): ");
+                    Console.WriteLine("Chcete upravit položky faktury? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                     ConsoleKeyInfo confirmationChangeItems = Console.ReadKey();
 
                     if (confirmationChangeItems.Key == ConsoleKey.A)
@@ -421,7 +504,7 @@ namespace InvoicingApp.UI
                                     Console.WriteLine();
                                     Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
 
-                                    string name = ReadInput("Název: ", false);
+                                    string name = ReadInput("Název: ", false, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název položky může obsahovat pouze písmena a čísla.");
                                     if (!string.IsNullOrEmpty(name))
                                     {
                                         item.Name = name;
@@ -445,7 +528,7 @@ namespace InvoicingApp.UI
                                         item.Discount = discount;
                                     }
 
-                                    Console.WriteLine("Chcete aplikovat snížené DPH? (A/N)");
+                                    Console.WriteLine("Chcete aplikovat snížené DPH? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou klávesu pro aplikování standardní sazby 21 %.)");
                                     ConsoleKeyInfo reducedVat = Console.ReadKey();
                                     Console.WriteLine();
 
@@ -468,11 +551,11 @@ namespace InvoicingApp.UI
                             }
                             else
                             {
-                                Console.WriteLine("Neplatné ID klienta.");
+                                Console.WriteLine("Neplatné ID položky.");
                             }
 
                             Console.WriteLine();
-                            Console.Write("Chcete upravit další položku? (A/N): ");
+                            Console.Write("Chcete upravit další položku? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                             anotherEdit = Console.ReadKey().Key;
                             Console.WriteLine();
 
@@ -498,6 +581,20 @@ namespace InvoicingApp.UI
         private void DeleteInvoice()
         {
             Console.Clear();
+            List<Invoice> invoices = InvoiceService.GetAll();
+
+            if (invoices.Count == 0)
+            {
+                Console.WriteLine("Žádné faktury k zobrazení.");
+            }
+            else
+            {
+                foreach (Invoice invoice in invoices)
+                {
+                    Console.WriteLine(invoice.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
             Console.WriteLine("=== Smazání faktury ===");
             Console.Write("Zadejte ID faktury: ");
 
@@ -516,7 +613,7 @@ namespace InvoicingApp.UI
                     Console.WriteLine("\n=== Detail faktury ===");
                     Console.WriteLine(invoice.ToString());
 
-                    Console.Write("\nOpravdu chcete smazat tuto fakturu? (A/N): ");
+                    Console.Write("\nOpravdu chcete smazat tuto fakturu? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                     ConsoleKeyInfo confirmation = Console.ReadKey();
 
                     if (confirmation.Key == ConsoleKey.A)
