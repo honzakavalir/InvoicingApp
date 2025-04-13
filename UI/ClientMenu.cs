@@ -168,6 +168,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Vytvoření klienta
+        /// Reguálrní výrazy byly vygenerovány pomocí AI
         /// </summary>
         private void CreateClient()
         {
@@ -175,15 +176,15 @@ namespace InvoicingApp.UI
             Console.WriteLine("=== Vytvoření klienta ===");
             Client client = new Client();
 
-            client.Name = ReadInput("Zadejte jméno: ");
-            client.Address = ReadInput("Zadejte adresu: ");
-            client.City = ReadInput("Zadejte město: ");
-            client.PostalCode = ReadInput("Zadejte PSČ: ");
-            client.Country = ReadInput("Zadejte zemi: ");
-            client.Email = ReadInput("Zadejte emailovou adresu: ");
-            client.Phone = ReadInput("Zadejte telefonní číslo: ");
-            client.IdentificationNumber = ReadInput("Zadejte IČO: ", false);
-            client.VatNumber = ReadInput("Zadejte DIČ: ", false);
+            client.Name = ReadInput("Zadejte název/jméno klienta: ", true , @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název klienta může obsahovat pouze písmena a čísla.");
+            client.Address = ReadInput("Zadejte ulici a č.p.: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Ulice a č.p. může obsahovat pouze písmena a čísla.");
+            client.City = ReadInput("Zadejte město: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Město může obsahovat pouze písmena.");
+            client.PostalCode = ReadInput("Zadejte PSČ: ", true, @"^\d{5}$", "Zadejte PSČ ve formátu 12345");
+            client.Country = ReadInput("Zadejte zemi: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Země může obsahovat pouze písmena.");
+            client.Email = ReadInput("Zadejte emailovou adresu: ", true, @"^[\w\.-]+@[\w\.-]+\.\w{2,}$", "Zadejte validní emailovou adresu.");
+            client.Phone = ReadInput("Zadejte telefonní číslo: ", true, @"^\+\d{3}\d{9}$", "Zadejte telefonní číslo ve formátu +420123456789.");
+            client.IdentificationNumber = ReadInput("Zadejte IČO: ", false, @"^\d{8}$", "Zadejte IČO ve formátu 12345678.");
+            client.VatNumber = ReadInput("Zadejte DIČ: ", false, @"^[A-Za-z]{2}\d{8}$", "Zadejte DIČ ve formátu CZ12345678.");
 
             ClientService.Create(client);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace InvoicingApp.UI
@@ -60,20 +61,45 @@ namespace InvoicingApp.UI
         /// <summary>
         /// Metoda přečte vstup od uživatele a vrátí ho
         /// </summary>
-        /// <param name="prompt">Text vstupu</param>
-        /// <param name="required">Je parametr povinný</param>
+        /// <param name="prompt">Zpráva zobrazená uživateli pro zadání vstupu.</param>
+        /// <param name="required">Určuje, zda je vstup povinný. Pokud ano, uživatel musí něco zadat.</param>
+        /// <param name="regexPattern">Nepovinný regulární výraz pro validaci vstupu.</param>
+        /// <param name="regexErrorMsg">Nepovinná vlastní chybová zpráva zobrazená při neplatném vstupu podle regexu.</param>
         /// <returns></returns>
-        protected string ReadInput(string prompt, bool required = true)
+        protected string ReadInput(string prompt, bool required = true, string regexPattern = "", string regexErrorMsg = "")
         {
             string input;
             do
             {
+                // Zobrazí výzvu uživateli
                 Console.Write(prompt);
+
+                // Načte vstup
                 input = Console.ReadLine()?.Trim();
 
                 if (!required || !string.IsNullOrEmpty(input))
                 {
-                    break;
+                    // Pokud input není prázdný a byl předán regulární výraz, ověří, zda odpovídá formátu
+                    if (!string.IsNullOrEmpty(input) && !string.IsNullOrEmpty(regexPattern) && !Regex.IsMatch(input, regexPattern))
+                    {
+                        // Zobrazí buď výchozí, nebo vlastní chybovou zprávu
+                        if (string.IsNullOrEmpty(regexErrorMsg))
+                        {
+                            Console.WriteLine("Zadaný formát je neplatný, prosím zadejte správně.");
+                        }
+                        else
+                        {
+                            Console.WriteLine(regexErrorMsg);
+                        }
+
+                        // Po neúspěšné validaci se opakuje zadání
+                        continue;
+                    } 
+                    else
+                    {
+                        // Vstup je buď prázdný (a povolený), nebo splňuje validaci => ukončí cyklus
+                        break;
+                    }
                 }
 
                 Console.WriteLine("Tato hodnota je povinná, prosím zadejte ji znovu.");
