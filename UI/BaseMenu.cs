@@ -211,10 +211,12 @@ namespace InvoicingApp.UI
         /// </summary>
         /// <param name="prompt">Text vstupu</param>
         /// <param name="property">Vlastnost k aktualizaci</param>
-        protected void UpdateProperty(string prompt, Action<string> setProperty)
+        /// <param name="regexPattern">Volitelný regulární výraz pro validaci vstupu</param>
+        /// <param name="regexErrorMsg">Zpráva, která se zobrazí při neplatném vstupu</param>
+        protected void UpdateProperty(string prompt, Action<string> setProperty, string regexPattern = "", string regexErrorMsg = "")
         {
             // Získám vstup od uživatele
-            string value = ReadInput(prompt, false);
+            string value = ReadInput(prompt, false, regexPattern, regexErrorMsg);
 
             // Pokud vstup není prázdný tak nastavím
             if (!string.IsNullOrEmpty(value))

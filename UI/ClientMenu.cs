@@ -113,6 +113,21 @@ namespace InvoicingApp.UI
         private void OpenClientDetail()
         {
             Console.Clear();
+            List<Client> clients = ClientService.GetAll();
+            Console.WriteLine("=== Klienti v systému ===");
+            if (clients.Count == 0)
+            {
+                Console.WriteLine("V systému nejsou žádní klienti.");
+            }
+            else
+            {
+                foreach (Client client in clients)
+                {
+                    Console.WriteLine(client.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
+            Console.WriteLine();
             Console.WriteLine("=== Detail klienta ===");
             Console.Write("Zadejte ID klienta: ");
 
@@ -194,10 +209,26 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Upravení klienta
+        /// Způsob aktualizace vlastností (využití Action<string>) + regulární výrazy => vygenerováno pomocí AI
         /// </summary>
         private void EditClient()
         {
             Console.Clear();
+            List<Client> clients = ClientService.GetAll();
+            Console.WriteLine("=== Klienti v systému ===");
+            if (clients.Count == 0)
+            {
+                Console.WriteLine("V systému nejsou žádní klienti.");
+            }
+            else
+            {
+                foreach (Client client in clients)
+                {
+                    Console.WriteLine(client.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
+            Console.WriteLine();
             Console.WriteLine("=== Úprava klienta ===");
             Console.Write("Zadejte ID klienta: ");
 
@@ -219,15 +250,15 @@ namespace InvoicingApp.UI
                     Console.WriteLine();
                     Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
 
-                    UpdateProperty("Zadejte jméno: ", newValue => client.Name = newValue);
-                    UpdateProperty("Zadejte adresu: ", newValue => client.Address = newValue);
-                    UpdateProperty("Zadejte město: ", newValue => client.City = newValue);
-                    UpdateProperty("Zadejte PSČ: ", newValue => client.PostalCode = newValue);
-                    UpdateProperty("Zadejte zemi: ", newValue => client.Country = newValue);
-                    UpdateProperty("Zadejte emailovou adresu: ", newValue => client.Email = newValue);
-                    UpdateProperty("Zadejte telefonní číslo: ", newValue => client.Phone = newValue);
-                    UpdateProperty("Zadejte IČO: ", newValue => client.IdentificationNumber = newValue);
-                    UpdateProperty("Zadejte DIČ: ", newValue => client.VatNumber = newValue);
+                    UpdateProperty("Zadejte jméno: ", newValue => client.Name = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název klienta může obsahovat pouze písmena a čísla.");
+                    UpdateProperty("Zadejte ulici a č.p.: ", newValue => client.Address = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Ulice a č.p. může obsahovat pouze písmena a čísla.");
+                    UpdateProperty("Zadejte město: ", newValue => client.City = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Město může obsahovat pouze písmena.");
+                    UpdateProperty("Zadejte PSČ: ", newValue => client.PostalCode = newValue, @"^\d{5}$", "Zadejte PSČ ve formátu 12345");
+                    UpdateProperty("Zadejte zemi: ", newValue => client.Country = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Země může obsahovat pouze písmena.");
+                    UpdateProperty("Zadejte emailovou adresu: ", newValue => client.Email = newValue, @"^[\w\.-]+@[\w\.-]+\.\w{2,}$", "Zadejte validní emailovou adresu.");
+                    UpdateProperty("Zadejte telefonní číslo: ", newValue => client.Phone = newValue, @"^\+\d{3}\d{9}$", "Zadejte telefonní číslo ve formátu +420123456789.");
+                    UpdateProperty("Zadejte IČO: ", newValue => client.IdentificationNumber = newValue, @"^\d{8}$", "Zadejte IČO ve formátu 12345678.");
+                    UpdateProperty("Zadejte DIČ: ", newValue => client.VatNumber = newValue, @"^[A-Za-z]{2}\d{8}$", "Zadejte DIČ ve formátu CZ12345678.");
 
                     ClientService.Update(client);
                     RenderClientDetail(client);
@@ -247,6 +278,21 @@ namespace InvoicingApp.UI
         private void DeleteClient()
         {
             Console.Clear();
+            List<Client> clients = ClientService.GetAll();
+            Console.WriteLine("=== Klienti v systému ===");
+            if (clients.Count == 0)
+            {
+                Console.WriteLine("V systému nejsou žádní klienti.");
+            }
+            else
+            {
+                foreach (Client client in clients)
+                {
+                    Console.WriteLine(client.ToString());
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
+            Console.WriteLine();
             Console.WriteLine("=== Smazání klienta ===");
             Console.Write("Zadejte ID klienta: ");
 
