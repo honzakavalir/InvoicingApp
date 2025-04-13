@@ -311,7 +311,7 @@ namespace InvoicingApp.UI
                     Console.WriteLine("\n=== Detail klienta ===");
                     Console.WriteLine(client.ToString());
 
-                    Console.Write("\nOpravdu chcete smazat tohoto klienta? (A/N): ");
+                    Console.Write("\nOpravdu chcete smazat tohoto klienta? (Stiskněte klávesu A pro potvrzení nebo jakoukoliv jinou pro odmítnutí): ");
                     ConsoleKeyInfo confirmation = Console.ReadKey();
 
                     if (confirmation.Key == ConsoleKey.A)
