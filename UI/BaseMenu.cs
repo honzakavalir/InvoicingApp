@@ -60,6 +60,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Metoda přečte vstup od uživatele a vrátí ho
+        /// - metoda byla částečně zpracována pomocí AI
         /// </summary>
         /// <param name="prompt">Zpráva zobrazená uživateli pro zadání vstupu.</param>
         /// <param name="required">Určuje, zda je vstup povinný. Pokud ano, uživatel musí něco zadat.</param>
@@ -77,6 +78,7 @@ namespace InvoicingApp.UI
                 // Načte vstup
                 input = Console.ReadLine()?.Trim();
 
+                // Pokud input není prázdný nebo je nepovinný
                 if (!required || !string.IsNullOrEmpty(input))
                 {
                     // Pokud input není prázdný a byl předán regulární výraz, ověří, zda odpovídá formátu
@@ -105,11 +107,12 @@ namespace InvoicingApp.UI
                 Console.WriteLine("Tato hodnota je povinná, prosím zadejte ji znovu.");
             } while (true);
 
+            // Vrátím input od uživatele
             return input;
         }
 
         /// <summary>
-        /// Metoda přečte číselný vstup od uživatele a vrátí ho jako int
+        /// Metoda přečte celočíselný vstup od uživatele a vrátí ho.
         /// </summary>
         /// <param name="prompt">Text vstupu</param>
         /// <param name="required">Je parametr povinný</param>
@@ -123,9 +126,13 @@ namespace InvoicingApp.UI
 
             do
             {
+                // Zobrazí výzvu uživateli
                 Console.Write(prompt);
+
+                // Načte vstup
                 input = Console.ReadLine()?.Trim();
 
+                // Pokud je vstup prázdný
                 if (string.IsNullOrEmpty(input))
                 {
                     if (!required) return 0;
@@ -133,18 +140,21 @@ namespace InvoicingApp.UI
                     continue;
                 }
 
+                // Pokud uživatel nezadal celé číslo
                 if (!int.TryParse(input, out number))
                 {
                     Console.WriteLine("Zadejte platné celé číslo.");
                     continue;
                 }
 
+                // Pokud je zadáno minimum a číslo to nesplňuje
                 if (min.HasValue && number < min.Value)
                 {
                     Console.WriteLine($"Zadané číslo musí být alespoň {min.Value}.");
                     continue;
                 }
 
+                // Pokud je zadáno maximum a číslo to nesplňuje
                 if (max.HasValue && number > max.Value)
                 {
                     Console.WriteLine($"Zadané číslo nesmí být větší než {max.Value}.");
@@ -154,11 +164,12 @@ namespace InvoicingApp.UI
                 break;
             } while (true);
 
+            // Vrátím input od uživatele
             return number;
         }
 
         /// <summary>
-        /// Metoda načte číselný vstup od uživatele a vrátí ho jako decimal
+        /// Metoda načte číselný vstup od uživatele a vrátí ho.
         /// </summary>
         /// <param name="prompt">Text vstupu</param>
         /// <param name="required">Je parametr povinný</param>
@@ -172,9 +183,13 @@ namespace InvoicingApp.UI
 
             do
             {
+                // Zobrazí výzvu uživateli
                 Console.Write(prompt);
+
+                // Načte vstup
                 input = Console.ReadLine()?.Trim();
 
+                // Pokud je vstup prázdný
                 if (string.IsNullOrEmpty(input))
                 {
                     if (!required) return 0;
@@ -182,18 +197,21 @@ namespace InvoicingApp.UI
                     continue;
                 }
 
+                // Pokud uživatel nezadal validní číslo
                 if (!decimal.TryParse(input, out number))
                 {
                     Console.WriteLine("Zadejte platné číslo (desetinné oddělujte čárkou nebo tečkou podle systému).");
                     continue;
                 }
 
+                // Pokud je zadáno minimum a číslo to nesplňuje
                 if (min.HasValue && number < min.Value)
                 {
                     Console.WriteLine($"Zadané číslo musí být alespoň {min.Value}.");
                     continue;
                 }
 
+                // Pokud je zadáno maximum a číslo to nesplňuje
                 if (max.HasValue && number > max.Value)
                 {
                     Console.WriteLine($"Zadané číslo nesmí být větší než {max.Value}.");
@@ -203,11 +221,13 @@ namespace InvoicingApp.UI
                 break;
             } while (true);
 
+            // Vrátím input od uživatele
             return number;
         }
 
         /// <summary>
         /// Metoda, která aktualizuje vlastnost objektu na základě vstupu od uživatele
+        /// - metoda byla částečně zpracována pomocí AI
         /// </summary>
         /// <param name="prompt">Text vstupu</param>
         /// <param name="property">Vlastnost k aktualizaci</param>
@@ -218,7 +238,7 @@ namespace InvoicingApp.UI
             // Získám vstup od uživatele
             string value = ReadInput(prompt, false, regexPattern, regexErrorMsg);
 
-            // Pokud vstup není prázdný tak nastavím
+            // Pokud vstup není prázdný
             if (!string.IsNullOrEmpty(value))
             {
                 // Zavolám předanou akci, která nastaví hodnotu do příslušné vlastnosti

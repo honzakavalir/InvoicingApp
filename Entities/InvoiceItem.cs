@@ -20,6 +20,10 @@ namespace InvoicingApp.Entities
         public int Discount { get; set; }
         public Vat Vat { get; set; }
 
+        /// <summary>
+        /// Obecný konstruktor položky faktury
+        /// - naplní defaultními hodnotami
+        /// </summary>
         public InvoiceItem() 
         { 
             Name = string.Empty;

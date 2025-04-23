@@ -44,11 +44,11 @@ namespace InvoicingApp.UI
         /// </summary>
         protected override void HandleUserInput()
         {
-            // Zachytím stisknutou klávesu
+            // Přečti stisknutou klávesu
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             Console.WriteLine();
 
-            // Provedu akci podle klávesy
+            // Podle stisknuté klávesy vykonej akci
             switch (keyInfo.Key)
             {
                 case ConsoleKey.D1:
@@ -87,9 +87,9 @@ namespace InvoicingApp.UI
         /// </summary>
         private void OpenClientList()
         {
-            List<Client> clients = ClientService.GetAll();
-
             Console.Clear();
+
+            List<Client> clients = ClientService.GetAll();
             Console.WriteLine("=== Klienti v systému ===");
 
             if (clients.Count == 0)
@@ -113,6 +113,7 @@ namespace InvoicingApp.UI
         private void OpenClientDetail()
         {
             Console.Clear();
+
             List<Client> clients = ClientService.GetAll();
             Console.WriteLine("=== Klienti v systému ===");
             if (clients.Count == 0)
@@ -183,7 +184,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Vytvoření klienta
-        /// Reguálrní výrazy byly vygenerovány pomocí AI
+        /// - reguálrní výrazy byly vygenerovány pomocí AI
         /// </summary>
         private void CreateClient()
         {
@@ -209,7 +210,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Upravení klienta
-        /// Způsob aktualizace vlastností (využití Action<string>) + regulární výrazy => vygenerováno pomocí AI
+        /// - způsob aktualizace vlastností (využití Action<string>) + regulární výrazy byly vygenerovány pomocí AI
         /// </summary>
         private void EditClient()
         {

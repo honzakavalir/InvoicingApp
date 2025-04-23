@@ -19,6 +19,10 @@ namespace InvoicingApp.Entities
         public DateTime DueDate { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
 
+        /// <summary>
+        /// Obecný konstruktor pro fakturu
+        /// - naplní fakturu defaultními hodnotami
+        /// </summary>
         public Invoice()
         {
             Id = 0;

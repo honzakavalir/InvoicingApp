@@ -9,6 +9,7 @@ namespace InvoicingApp.Services
 {
     /// <summary>
     /// Service pro práci s DPH
+    /// - je static, protože během celého běhu programu existuje pouze jednou
     /// </summary>
     public static class VatService
     {
@@ -16,7 +17,7 @@ namespace InvoicingApp.Services
 
         /// <summary>
         /// Zkontroluje, jestli aplikace má k dispozici soubor Vat.json, kde jsou uloženy sazby DPH.
-        /// Pokud ne, vytvoří ho
+        /// Pokud ne, vytvoří ho.
         /// </summary>
         public static void InitializeVatFile()
         {

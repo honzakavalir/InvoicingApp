@@ -157,6 +157,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Vytvoření faktury
+        /// - regulární výrazy byly vygenerovány pomocí AI
         /// </summary>
         private void CreateInvoice()
         {
@@ -275,7 +276,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Přidání položky do faktury
-        /// Regulární výrazy byly vygenerovány AI
+        /// - regulární výrazy byly vygenerovány pomocí AI
         /// </summary>
         /// <param name="invoice">Faktura</param>
         private void AddInvoiceItem(Invoice invoice)
@@ -329,6 +330,7 @@ namespace InvoicingApp.UI
 
         /// <summary>
         /// Upravení faktury
+        /// - regulární výrazy byly vygenerovány pomocí AI
         /// </summary>
         private void EditInvoice()
         {

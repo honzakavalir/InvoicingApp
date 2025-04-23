@@ -8,6 +8,7 @@ namespace InvoicingApp
     {
         static void Main(string[] args)
         {
+            // Vytvořím instanci app engine a zavolám metodu Start
             AppEngine engine = new AppEngine();
             engine.Start();
         }

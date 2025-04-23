@@ -21,9 +21,17 @@ namespace InvoicingApp.Entities
         public string Country { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+
+        // nepovinné IČO
         public string? IdentificationNumber { get; set; }
+
+        // nepovinné DIČ
         public string? VatNumber { get; set; }
 
+        /// <summary>
+        /// Obecný konstruktor
+        /// - naplní entitu klienta defaultními hodnotami
+        /// </summary>
         public Client()
         {
             Id = 0;

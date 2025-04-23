@@ -58,6 +58,12 @@ namespace InvoicingApp.Services
             return entities.OrderBy(e => GetEntityId(e)).ToList();
         }
 
+        /// <summary>
+        /// Vrátí entitu na základě předaného ID
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id">ID entity</param>
+        /// <returns></returns>
         public static T GetById<T>(int id) where T : IEntity
         {
             // Získám název souboru
