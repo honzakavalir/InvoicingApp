@@ -115,6 +115,7 @@ namespace InvoicingApp.UI
         private void OpenInvoiceDetail()
         {
             Console.Clear();
+            Console.WriteLine("=== Všechny faktury ===");
             List<Invoice> invoices = InvoiceService.GetAll();
 
             if (invoices.Count == 0)
@@ -335,6 +336,7 @@ namespace InvoicingApp.UI
         private void EditInvoice()
         {
             Console.Clear();
+            Console.WriteLine("=== Všechny faktury ===");
             List<Invoice> invoices = InvoiceService.GetAll();
 
             if (invoices.Count == 0)
