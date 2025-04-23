@@ -192,7 +192,7 @@ namespace InvoicingApp.UI
             Console.WriteLine("=== Vytvoření klienta ===");
             Client client = new Client();
 
-            client.Name = ReadInput("Zadejte název/jméno klienta: ", true , @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název klienta může obsahovat pouze písmena a čísla.");
+            client.Name = ReadInput("Zadejte název/jméno klienta: ", true , @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 .,\\-]+$", "Název klienta může obsahovat pouze písmena, čísla, tečky, pomlčky a čárky.");
             client.Address = ReadInput("Zadejte ulici a č.p.: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Ulice a č.p. může obsahovat pouze písmena a čísla.");
             client.City = ReadInput("Zadejte město: ", true, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Město může obsahovat pouze písmena.");
             client.PostalCode = ReadInput("Zadejte PSČ: ", true, @"^\d{5}$", "Zadejte PSČ ve formátu 12345");
@@ -251,7 +251,7 @@ namespace InvoicingApp.UI
                     Console.WriteLine();
                     Console.WriteLine("Pokud danou vlastnost nechcete přepsat, odentrujte řádek bez zadání nové hodnoty.");
 
-                    UpdateProperty("Zadejte jméno: ", newValue => client.Name = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Název klienta může obsahovat pouze písmena a čísla.");
+                    UpdateProperty("Zadejte jméno: ", newValue => client.Name = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 .,\\-]+$", "Název klienta může obsahovat pouze písmena, čísla, tečky, pomlčky a čárky.");
                     UpdateProperty("Zadejte ulici a č.p.: ", newValue => client.Address = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž0-9 ]+$", "Ulice a č.p. může obsahovat pouze písmena a čísla.");
                     UpdateProperty("Zadejte město: ", newValue => client.City = newValue, @"^[A-Za-zÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž ]+$", "Město může obsahovat pouze písmena.");
                     UpdateProperty("Zadejte PSČ: ", newValue => client.PostalCode = newValue, @"^\d{5}$", "Zadejte PSČ ve formátu 12345");

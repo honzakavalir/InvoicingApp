@@ -573,7 +573,7 @@ namespace InvoicingApp.UI
             }
             else
             {
-                Console.WriteLine("Neplatné ID klienta.");
+                Console.WriteLine("Neplatné ID faktury.");
             }
 
             Pause();
@@ -585,6 +585,7 @@ namespace InvoicingApp.UI
         private void DeleteInvoice()
         {
             Console.Clear();
+            Console.WriteLine("=== Všechny faktury ===");
             List<Invoice> invoices = InvoiceService.GetAll();
 
             if (invoices.Count == 0)
