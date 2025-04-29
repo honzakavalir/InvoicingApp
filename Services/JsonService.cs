@@ -66,16 +66,24 @@ namespace InvoicingApp.Services
         /// <returns></returns>
         public static T GetById<T>(int id) where T : IEntity
         {
-            // Získám název souboru
-            string fileName = GetFileName<T>();
+            try
+            {
+                // Získám název souboru
+                string fileName = GetFileName<T>();
 
-            // Načtu data
-            List<T> entities = GetAll<T>();
+                // Načtu data
+                List<T> entities = GetAll<T>();
 
-            // Najdu entitu podle ID
-            var entity = entities.FirstOrDefault(e => GetEntityId(e) == id);
+                // Najdu entitu podle ID
+                var entity = entities.FirstOrDefault(e => GetEntityId(e) == id);
 
-            return entity;
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Chyba při vykonávání metody GetById: {ex.Message}");
+                throw;
+            }
 
         }
 
@@ -86,20 +94,28 @@ namespace InvoicingApp.Services
         /// <returns>List obsahující data daného datového typu</returns>
         public static List<T> GetAll<T>()
         {
-            // Získám název souboru
-            string fileName = GetFileName<T>();
-
-            if (File.Exists(fileName))
+            try
             {
-                // Pokud soubor existuje, přečtu obsah souboru
-                string json = File.ReadAllText(fileName);
+                // Získám název souboru
+                string fileName = GetFileName<T>();
 
-                // Obsah souboru převedu na objekty a vloží se do listu - pokud je obsah JSON souboru prázdný, vrátím prázdný list
-                return JsonConvert.DeserializeObject<List<T>>(json) ?? new List<T>();
+                if (File.Exists(fileName))
+                {
+                    // Pokud soubor existuje, přečtu obsah souboru
+                    string json = File.ReadAllText(fileName);
+
+                    // Obsah souboru převedu na objekty a vloží se do listu - pokud je obsah JSON souboru prázdný, vrátím prázdný list
+                    return JsonConvert.DeserializeObject<List<T>>(json) ?? new List<T>();
+                }
+                else
+                {
+                    // Pokud soubor neexistuje, vrátím prázdný list
+                    return new List<T>();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Pokud soubor neexistuje, vrátím prázdný list
+                Console.WriteLine($"Chyba při vykonávání metody GetAll: {ex.Message}");
                 return new List<T>();
             }
         }
@@ -112,47 +128,16 @@ namespace InvoicingApp.Services
         /// <exception cref="ArgumentException"></exception>
         public static void Create<T>(T entity) where T : IEntity
         {
-            // Získám název souboru
-            string fileName = GetFileName<T>();
-
-            // Načtu data
-            List<T> entities = GetAll<T>();
-
-            // Přidám entitu
-            entities.Add(entity);
-
-            // Seřadím seznam entit vzestupně podle ID
-            entities = SortEntitiesById(entities);
-
-            // Serializace do JSON
-            string json = JsonConvert.SerializeObject(entities, Formatting.Indented);
-
-            // Uložím do souboru
-            File.WriteAllText(fileName, json);
-        }
-
-        /// <summary>
-        /// Uloží aktualizovanou verzi entity do JSON souboru
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entity"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public static void Update<T>(T entity) where T : IEntity
-        {
-            // Získám název souboru
-            string fileName = GetFileName<T>();
-
-            // Načtu data
-            List<T> entities = GetAll<T>();
-
-            // Najdu existující entitu podle ID
-            var existingEntity = entities.FirstOrDefault(e => GetEntityId(e) == GetEntityId(entity));
-
-            if (existingEntity != null)
+            try
             {
-                // Aktualizace existující entity
-                entities.Remove(existingEntity);  // Odstraním starou entitu
-                entities.Add(entity);  // Přidám novou verzi (aktualizovanou)
+                // Získám název souboru
+                string fileName = GetFileName<T>();
+
+                // Načtu data
+                List<T> entities = GetAll<T>();
+
+                // Přidám entitu
+                entities.Add(entity);
 
                 // Seřadím seznam entit vzestupně podle ID
                 entities = SortEntitiesById(entities);
@@ -163,10 +148,57 @@ namespace InvoicingApp.Services
                 // Uložím do souboru
                 File.WriteAllText(fileName, json);
             }
-            else
+            catch (Exception ex)
             {
-                // Pokud entita neexistuje, vyvolám výjimku
-                throw new ArgumentException($"Entity with ID {GetEntityId(entity)} not found.");
+                Console.WriteLine($"Chyba při vykonávání metody Create: {ex.Message}");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Uloží aktualizovanou verzi entity do JSON souboru
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void Update<T>(T entity) where T : IEntity
+        {
+            try
+            {
+                // Získám název souboru
+                string fileName = GetFileName<T>();
+
+                // Načtu data
+                List<T> entities = GetAll<T>();
+
+                // Najdu existující entitu podle ID
+                var existingEntity = entities.FirstOrDefault(e => GetEntityId(e) == GetEntityId(entity));
+
+                if (existingEntity != null)
+                {
+                    // Aktualizace existující entity
+                    entities.Remove(existingEntity);  // Odstraním starou entitu
+                    entities.Add(entity);  // Přidám novou verzi (aktualizovanou)
+
+                    // Seřadím seznam entit vzestupně podle ID
+                    entities = SortEntitiesById(entities);
+
+                    // Serializace do JSON
+                    string json = JsonConvert.SerializeObject(entities, Formatting.Indented);
+
+                    // Uložím do souboru
+                    File.WriteAllText(fileName, json);
+                }
+                else
+                {
+                    // Pokud entita neexistuje, vyvolám výjimku
+                    throw new ArgumentException($"Entity with ID {GetEntityId(entity)} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Chyba při vykonávání metody Update: {ex.Message}");
+                throw;
             }
         }
 
@@ -178,32 +210,40 @@ namespace InvoicingApp.Services
         /// <exception cref="ArgumentException"></exception>
         public static void Delete<T>(int entityId) where T : IEntity
         {
-            // Získám název souboru
-            string fileName = GetFileName<T>();
-
-            // Načtu data
-            List<T> entities = GetAll<T>();
-
-            // Najdu entitu podle ID
-            T entityToDelete = entities.FirstOrDefault(e => GetEntityId(e) == entityId);
-
-            if (entityToDelete != null)
+            try
             {
-                // Odstraním entitu ze seznamu
-                entities.Remove(entityToDelete);
+                // Získám název souboru
+                string fileName = GetFileName<T>();
 
-                // Seřadím seznam entit vzestupně podle ID
-                entities = SortEntitiesById(entities);
+                // Načtu data
+                List<T> entities = GetAll<T>();
 
-                // Serializace do JSON
-                string json = JsonConvert.SerializeObject(entities, Formatting.Indented);
+                // Najdu entitu podle ID
+                T entityToDelete = entities.FirstOrDefault(e => GetEntityId(e) == entityId);
 
-                // Zápis do souboru
-                File.WriteAllText(fileName, json);
+                if (entityToDelete != null)
+                {
+                    // Odstraním entitu ze seznamu
+                    entities.Remove(entityToDelete);
+
+                    // Seřadím seznam entit vzestupně podle ID
+                    entities = SortEntitiesById(entities);
+
+                    // Serializace do JSON
+                    string json = JsonConvert.SerializeObject(entities, Formatting.Indented);
+
+                    // Zápis do souboru
+                    File.WriteAllText(fileName, json);
+                }
+                else
+                {
+                    throw new ArgumentException($"Entity with ID {entityId} not found.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                throw new ArgumentException($"Entity with ID {entityId} not found.");
+                Console.WriteLine($"Chyba při vykonávání metody Delete: {ex.Message}");
+                throw;
             }
         }
 
